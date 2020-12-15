@@ -2,7 +2,7 @@ from fastapi import FastAPI, Response, status
 from datetime import datetime, timedelta, timezone
 import pytz
 
-from models import Transaction, transactions
+from models import Transaction, transactions, StatsResponse
 
 app = FastAPI(
     title="Transaction App",
@@ -17,7 +17,7 @@ def home():
         "message": "Welcome to the Transactions app"
     }
 
-@app.post("/transactions", status_code=status.HTTP_201_CREATED)
+@app.post("/transactions", status_code=status.HTTP_201_CREATED, response_model=Transaction)
 def create_transaction(transaction: Transaction, response: Response):
     a_min_ago = datetime.utcnow() - timedelta(seconds=60)
 
@@ -29,7 +29,10 @@ def create_transaction(transaction: Transaction, response: Response):
     return transaction
 
 
-@app.get("/statistics")
+@app.get(
+    "/statistics",
+    response_model=StatsResponse
+)
 def get_stats():
     a_min_ago = datetime.utcnow() - timedelta(seconds=60)
     transaction_amounts = []
