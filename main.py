@@ -11,6 +11,12 @@ app = FastAPI(
 
 utc=pytz.UTC
 
+@app.get("/")
+def home():
+    return {
+        "message": "Welcome to the Transactions app"
+    }
+
 @app.post("/transactions", status_code=status.HTTP_201_CREATED)
 def create_transaction(transaction: Transaction, response: Response):
     a_min_ago = datetime.utcnow() - timedelta(seconds=60)
